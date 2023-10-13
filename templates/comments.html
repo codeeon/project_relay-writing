@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/comments.css" />
+  </head>
+
+  <body>
+    <div class="main">
+      <!-- Button trigger modal -->
+      <div class="content">
+        <div>
+          <button id="btn2" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">이어서 작성하기</button>
+        </div>
+
+        {% for comment in comments_list %}
+        <div class="card">
+          {% if current_user.id == comment.author_id %}
+          <div class="card-ctr">
+            <button type="button" class="btn1" data-bs-toggle="modal" data-bs-target="#editModal{{ comment.id }}">수정</button>
+            <form class="delete_form" method="post" action="/delete_comment/{{ comment.id }}">
+              <button class="btn1" type="submit">삭제</button>
+            </form>
+          </div>
+
+          {% endif %}
+
+          <p>{{ comment.text }}</p>
+
+          <div class="likebtn">
+            <p class="username">by {{ comment.comment_author.name }}</p>
+            <div class="likes">
+              <span class="likescount" id="likes-{{ comment.id }}">{{ comment.likes }}</span>
+              <button class="btn btn-like blue" data-comment-id="{{ comment.id }}">♡</button>
+
+              <label for="likes-{{ comment.id }}" class="heart-icon"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="editModal{{ comment.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ comment.id }}" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel{{ comment.id }}">내용 수정하기</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="post" action="/edit/{{ comment.id }}">
+                  <div class="mb-3">
+                    <label for="title"></label>
+                    <textarea name="title" id="title{{ comment.id }}" rows="4" required>{{ comment.title }}</textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn2">저장</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+
+        <script>
+          // JavaScript 추가
+          document.querySelectorAll('.btn-like').forEach(function (button) {
+            button.addEventListener('click', function () {
+              const songId = button.getAttribute('data-comment-id');
+              const liked = button.getAttribute('data-liked') === 'true'; // 현재 상태 확인
+
+              if (liked) {
+                // 좋아요를 취소합니다.
+                button.setAttribute('data-liked', 'false');
+                button.innerHTML = '♡ '; // 빈 하트로 변경
+                const likesElement = document.getElementById(`likes-${songId}`);
+                likesElement.innerHTML = parseInt(likesElement.innerHTML) - 1;
+              } else {
+                // 좋아요를 추가합니다.
+                button.setAttribute('data-liked', 'true');
+                button.innerHTML = '♥ '; // 채워진 하트로 변경
+                const likesElement = document.getElementById(`likes-${songId}`);
+                likesElement.innerHTML = parseInt(likesElement.innerHTML) + 1;
+              }
+
+              console.log(button.getAttribute('data-liked') === 'true');
+
+              // 서버로 현재 상태를 전송
+              fetch(`/like/${songId}`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  liked: button.getAttribute('data-liked') === 'true',
+                }),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  // 서버에서 반환된 데이터 처리
+                  if (data.success) {
+                    // 성공적으로 업데이트됨
+
+                    // 마지막으로 클릭한 곡을 저장
+                    const lastLikedSong = {
+                      id: songId,
+                      liked: button.getAttribute('data-liked') === 'true',
+                    };
+
+                    // 로컬 스토리지에 저장
+                    localStorage.setItem('lastLikedSong', JSON.stringify(lastLikedSong));
+                  } else {
+                    // 업데이트에 실패한 경우
+                  }
+                })
+                .catch((error) => {
+                  // 오류 처리
+                });
+            });
+          });
+        </script>
+
+        <div>
+          <button id="btn" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">내용 추가하기</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="/create_comment/{{ contents_id }}" method="POST">
+              <div class="mb-3">
+                <label for="body">이어서 이야기 만들기</label>
+                <textarea type="text" name="body" id="title"></textarea>
+              </div>
+              <button type="submit">+</button>
+            </form>
+          </div>
+
+          <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"
+          ></script>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

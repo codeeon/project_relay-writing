@@ -1,0 +1,131 @@
+/* CSS 스타일 */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+* {
+  font-family: 'Nanum Gothic', sans-serif;
+}
+
+body {
+  background-color: rgba(187, 187, 187, 0.1);
+}
+#btn2 {
+  width: 496px;
+}
+#exampleInputEmail1 {
+  height: 220px;
+}
+.card {
+  width: 500px;
+  display: block;
+}
+#btn {
+  display: inline-block;
+  width: 50px;
+  /* 동그라미 버튼의 너비 */
+  height: 50px;
+  /* 동그라미 버튼의 높이 */
+  background-color: rgb(192, 148, 221);
+  color: white;
+  /* 텍스트 색상 */
+  border-radius: 50%;
+  /* 동그라미 모양을 위한 원형 모서리 */
+
+  font-size: 20px;
+  /* 텍스트 크기 */
+  cursor: pointer;
+
+  margin-top: 40px;
+}
+.content {
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  border: none;
+  margin-top: 5px;
+  background-color: rgba(187, 187, 187, 0.1);
+}
+
+p {
+  margin-top: 29px;
+}
+
+#btn2 {
+  background-color: rgb(192, 148, 221);
+  color: white;
+  /* 텍스트 색상 */
+}
+
+.mb-3 > textarea {
+  width: 450px;
+}
+
+.btn1 {
+  font-size: 11px;
+  color: rgb(134, 134, 134);
+  border-radius: 30px;
+  background-color: rgb(216, 216, 216);
+  border: none;
+  width: 40px;
+  height: 20px;
+}
+
+.card-ctr {
+  display: flex;
+  justify-content: right;
+  align-items: centers;
+  padding: 5px;
+  gap: 5px;
+}
+
+.delete_form {
+  display: flex;
+}
+
+.likebtn {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+  border-color: transparent;
+  align-items: center;
+}
+
+.no-focus-outline:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.blue {
+  color: red;
+}
+
+.blue:focus {
+  border-color: none;
+  border: none;
+}
+
+.blue:active {
+  border-color: none;
+  border: none;
+}
+.blue:hover {
+  color: red;
+}
+
+.likescount {
+  font-size: 11px;
+  color: gray;
+}
+
+.btn1:hover {
+  color: white;
+  background-color: black;
+}
+.username {
+  color: rgb(160, 160, 160);
+  font-size: 12px;
+  padding-bottom: 12px;
+}
