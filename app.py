@@ -29,16 +29,6 @@ class Main(db.Model):
 with app.app_context():
     db.create_all()
 
-# @app.route("/")
-# def home():
-#     name = '김상연'
-#     motto = "행복해서 웃는게 아니라 웃어서 행복합니다."
-
-#     context = {
-#         "name": name,
-#         "motto": motto,
-#     }
-#     return render_template('motto.html', data=context)
 
 @app.route("/main/")
 def main():
