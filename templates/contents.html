@@ -23,7 +23,7 @@
         <a class="nav" href="#">MyPage</a>
       </div>
       <div class="nav-right">
-        <form class="nav" action="" method="get"><input type="submit" value="로그아웃" /></form>
+        <button onclick="window.location.href='{{ url_for( 'logout' ) }}';">로그아웃</button>
       </div>
     </div>
     <div class="header"></div>
@@ -73,7 +73,7 @@
       <!-- 게시글 -->
       {% for contents in data %}
       <div class="column">
-        <a href="{{ url_for('comments/contents.id')}}">
+        <a href="{{ url_for('comments', contents_id = contents.id)}}">
           <div class="image"><img class="image2" src="{{ contents.img_url }}" alt="..." /></div>
           <div class="column-body">
             <div class="column-top">

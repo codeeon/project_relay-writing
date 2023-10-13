@@ -68,7 +68,7 @@ class Comment(db.Model):
     # Contents와 관계
     parent_post = relationship("Content", back_populates="comments")
     likes = db.Column(db.Integer)
-    text = db.Column(db.Text, nullable=False)
+    text = db.Column(db.String, nullable=False)
 
 
 with app.app_context():
@@ -201,25 +201,31 @@ def delete_contents(contents_id):
 # comment 페이지
 @app.route("/comments/<int:contents_id>", methods=['GET', 'POST']) # url 이게 맞나 ??
 def comments(contents_id):
-    if request.method == 'POST':
         # form에서 보낸 데이터 받아오기
         # username_receive = request.form["username"]
-        requested_content = Content.query.get(contents_id)
-        title_receive = request.form("title")
-        new_comments = Comment(
-            parent_post = requested_content,
-            comments_author = current_user,
-            text = title_receive,
-            likes = 0
-        )
+        
         # data = Comment(username=username_receive, title=title_receive)
-        db.session.add(new_comments)
-        db.session.commit()
+        
         # likes = db.Column(db.Integer, default=0)  # 좋아요 수를 저장하는 필드 추가
-        return redirect(url_for('comments/<int:contents_id>'))
+        
 
     comments_list = Comment.query.all()
-    return render_template('conmments.html', comments_list=comments_list)
+    return render_template('comments.html', comments_list=comments_list, contents_id=contents_id)
+
+@app.route("/create_comment/<int:contents_id>", methods=["POST"])
+def create_comment(contents_id):
+    requested_content = Content.query.get(contents_id)
+    body = request.form.get("body")
+    new_comments = Comment(
+        parent_post = requested_content,
+        comment_author = current_user,
+        text = body,
+        likes = 0
+            )
+    db.session.add(new_comments)
+    db.session.commit()
+    return redirect(url_for('comments', contents_id=contents_id))
+
 
 @app.route("/edit/<int:contents_id>", methods=['POST'])
 def edit_comments(contents_id):
@@ -232,7 +238,7 @@ def edit_comments(contents_id):
     return redirect(url_for('comments'))
 
 @app.route("/delete/<int:contents_id>", methods=['POST'])
-def delete_comments(contents_id):
+def delete_comment(contents_id):
     comments = Comment.query.get(contents_id)
     if comments:
         db.session.delete(comments)

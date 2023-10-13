@@ -18,18 +18,18 @@
           <button id="btn2" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">이어서 작성하기</button>
         </div>
 
-        {% for comments in song_list %}
+        {% for comments in comments_list %}
 
         <div class="card">
-          <form method="post" action="/delete/{{ contents.id }}">
+          <form method="post" action="/delete_comment/{{ contents_id }}">
             <button type="button" class="btn1" data-bs-toggle="modal" data-bs-target="#editModal{{ comments.id }}">수정</button>
             <button class="btn1" type="submit">삭제</button>
           </form>
 
-          <p>{{ comments.title }}</p>
+          <p>{{ comments.text }}</p>
 
           <div class="likebtn">
-            <p class="username">by {{ comments.username }}</p>
+            <p class="username">by {{ comments.comment_author.name }}</p>
             <div class="likes">
               <span class="likescount" id="likes-{{ comments.id }}">{{ comments.likes }}</span>
               <button class="btn btn-like blue" data-comments-id="{{ comments.id }}">♡</button>
@@ -136,14 +136,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form method="post" action="/">
+            <form method="post" action="/create_comment/{{ contents_id }}" method="POST">
               <div class="mb-3">
                 <label for="username">닉네임</label>
                 <input type="text" name="username" id="username" required />
               </div>
               <div class="mb-3">
-                <label for="title">이어서 이야기 만들기</label>
-                <textarea type="text" name="title" id="title"></textarea>
+                <label for="body">이어서 이야기 만들기</label>
+                <textarea type="text" name="body" id="title"></textarea>
               </div>
               <button type="submit">+</button>
             </form>
