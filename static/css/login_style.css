@@ -1,0 +1,194 @@
+* {
+  font-family: "Gabarito", sans-serif;
+  color: #272826;
+}
+
+.base {
+  display: flex;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.left {
+  width: 45%;
+  background-image: url("../image/reading.png");
+  background-repeat: no-repeat;
+  background-size: auto 50%;
+  background-position: center;
+  background-color: #FAF8FC;
+}
+
+.right {
+  width: 55%;
+  position:relative;
+}
+
+.alertContainer {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translate(-50%);
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 35px;
+  gap:15px;
+
+  background-color: #FAF8FC;
+  padding: 10px 20px;
+
+  width: auto;
+  height: 60px;
+
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.alertIcon {
+  font-size: 35px;
+  color:red;
+}
+
+.alertCloseBtn {
+  border : none;
+  background-color: transparent;
+}
+
+.alertMsg {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.alertCloseBtn {
+  cursor: pointer;
+  font-size: 25px;
+  color: gray;
+}
+
+.alertCloseIcon {
+  
+}
+
+.alertCloseIcon:hover {
+  color: black;
+}
+
+.signupContainer {
+  margin : 120px 0 20px auto;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.signupContainer > span {
+  color: #a09fa4;
+  
+}
+
+.signupContainer > button {
+  border: 1px solid #a09fa4;
+  width: 90px;
+  height: 35px;
+  border-radius: 15px;
+  background-color: #FAF8FC;
+  color: black;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+}
+
+.signupContainer > button:hover {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25), 0 3px 6px rgba(0, 0, 0, 0.22);
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  padding: 120px;
+}
+
+.title {
+  font-size: 45px;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: gray;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 50px;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.inputTitle {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.msgContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.errorMsg {
+  color:red;  
+}
+
+.border-red{
+  border: 3px solid red;
+}
+
+input {
+  height: 30px;
+  font-size: 18px;
+  padding: 10px;
+  outline: none;
+  border : 3px solid #F2F2F2;
+  border-radius: 10px;
+}
+
+input:focus {
+  border: 3px solid #bfacf2;
+}
+
+input:hover {
+  border: 3px solid #bfacf2;
+}
+
+.loginBtn {
+  margin-top: 25px;
+  background-color: #7236FE;
+  color: #fff;
+  border : none;
+  border-radius: 20px;
+  width: 250px;
+  height: 50px;
+  font-size: 25px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+}
+
+.loginBtn:hover {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25), 0 6px 9px rgba(0, 0, 0, 0.22);
+}

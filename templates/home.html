@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}" />
   </head>
   <body>
     <div class="container">
-      
       <div class="nav">
         <div class="home"></div>
         <div class="ctrBtn"></div>
         {% if logged_in: %}
         <h1 class="title">Welcome, {{ current_user.nickname }}!</h1>
         {% endif %}
-        <button onclick="window.location.href='{{ url_for( 'logout' ) }}';">로그아웃</button>
+        <!-- <button onclick="window.location.href='{{ url_for( 'logout' ) }}'">로그아웃</button> -->
       </div>
 
       <div class="main">
@@ -24,52 +23,32 @@
             <div class="msgContainer">
               <span class="inputTitle">타이틀</span>
             </div>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              placeholder="타이틀을 넣어주세요."
-              autocomplete="none"
-            />
+            <input type="text" id="title" name="title" placeholder="타이틀을 넣어주세요." autocomplete="none" />
           </div>
           <div class="inputContainer">
             <div class="msgContainer">
               <span class="inputTitle">내용</span>
             </div>
-            <input
-              type="text"
-              id="contents"
-              name="contents"
-              placeholder="타이틀을 넣어주세요."
-              autocomplete="none"
-            />
+            <input type="text" id="contents" name="contents" placeholder="타이틀을 넣어주세요." autocomplete="none" />
           </div>
           <div class="inputContainer">
             <div class="msgContainer">
               <span class="inputTitle">이미지 URL</span>
             </div>
-            <input
-              type="text"
-              id="imageUrl"
-              name="imageUrl"
-              placeholder="이미지 url을 넣어주세요."
-              autocomplete="none"
-            />
+            <input type="text" id="imageUrl" name="imageUrl" placeholder="이미지 url을 넣어주세요." autocomplete="none" />
           </div>
           <button class="loginBtn" type="submit">글 작성</button>
 
           <div class="post">
-            {% for post in all_posts %}
-              {% if current_user.nickname == post.author.nickname %}
-                <h1>{{ post.title }}</h1>
-                <p>{{ post.contents }}</p>
-                <p>by. {{ post.author.nickname }}</p>
-                <p>time. {{ post.date }}</p>
-                <p>좋아요 : {{ post.liked_count }}</p>
-                <button>liked</button>
-              {% endif %}
-            {% endfor %}
-            
+            {% for post in all_posts %} {% if current_user.nickname == post.author.nickname %}
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.contents }}</p>
+            <p>by. {{ post.author.nickname }}</p>
+            <p>time. {{ post.date }}</p>
+            <p>좋아요 : {{ post.liked_count }}</p>
+            <button>liked</button>
+            {% endif %} {% endfor %}
+
             <h1>{{ data }}</h1>
           </div>
         </form>
