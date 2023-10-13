@@ -208,8 +208,9 @@ def comments(contents_id):
         
         # likes = db.Column(db.Integer, default=0)  # 좋아요 수를 저장하는 필드 추가
         
-
-    comments_list = Comment.query.all()
+    comments_list = Comment.query.filter_by(post_id = contents_id).all()
+    print(comments_list)
+    
     return render_template('comments.html', comments_list=comments_list, contents_id=contents_id)
 
 @app.route("/create_comment/<int:contents_id>", methods=["POST"])
