@@ -19,6 +19,8 @@ db = SQLAlchemy(app)
 
 # db 테이블 생성
 # User db
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +35,8 @@ class User(UserMixin, db.Model):
     comments = relationship("Comment", back_populates="comment_author")
 
 # Content
+
+
 class Content(db.Model):
     __tablename__ = 'contents'
     id = db.Column(db.Integer, primary_key=True)
@@ -79,11 +83,15 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 # key를 기반으로 로그인
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 # 회원가입 페이지
+
+
 @app.route('/register', methods=["GET", "POST"])
 def register():
     # POST 요청일 경우 새로운 회원으로 등록
@@ -116,29 +124,31 @@ def register():
     return render_template('register.html')
 
 # 로그인 페이지
+
+
 @app.route('/login', methods=["GET", "POST"])
 def login():
     # POST 요청 시 로그인 시작
     if request.method == "POST":
         id_user = request.form.get('id_user')
         password = request.form.get('password')
-        
+
         # 등록되어 있는 아이디로 db찾기
         # filter_by로 아이디을 찾기
         # first() : 첫번째로 매칭되는 값 가져오기
         user = User.query.filter_by(id_user=id_user).first()
-        
+
         # user정보가 없는 경우
         if not user:
             flash("등록된 아이디가 존재하지 않습니다.")
-              # 에러메세지
+            # 에러메세지
             return redirect(url_for('login'))  # 로그인 페이지로 이동
-        
+
         # check_password_hash : 입력한 패스워드를 해싱한 후 db에 저장되어있는 해싱된 패스워드와 비교
         # 비밀번호가 일치하지 않는 경우
         elif not check_password_hash(user.password, password):
             flash("비밀번호가 일치하지 않습니다.")
-        
+
         # 로그인
         else:
             login_user(user)
@@ -147,12 +157,16 @@ def login():
     return render_template('login.html')
 
 # 로그아웃
+
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
 # 나중에 인증할때 사용 가능
+
+
 @app.route('/secrets')
 @login_required
 def secrets():
@@ -160,35 +174,41 @@ def secrets():
     return render_template("secrets.html", name=current_user.name)
 
 # 메인페이지
+
+
 @app.route('/contents')
 def contents():
-    if not current_user.is_authenticated :
+    if not current_user.is_authenticated:
         redirect(url_for('login'))
     contents_list = Content.query.all()
     return render_template('contents.html', data=contents_list, logged_in=current_user.is_authenticated)
 
 # 새 이야기 만들기
+
+
 @app.route("/contents/create/", methods=["GET", "POST"])
 def contents_create():
-        # form get 받아오기
-        title_receive = request.form.get("title")
-        body_receive = request.form.get("body")
-        image_receive = request.form.get("img_url")
-        # db 생성
-        new_contents = Content(
-            title = title_receive,
-            body = body_receive,
-            img_url = image_receive,
-            author = current_user
-        )
-        
-        # 데이터를 DB에 저장하기
-        # contents = Content(title=title_receive, body=body_receive, img_url=image_receive)
-        db.session.add(new_contents)
-        db.session.commit()
-        return redirect(url_for('contents'))
+    # form get 받아오기
+    title_receive = request.form.get("title")
+    body_receive = request.form.get("body")
+    image_receive = request.form.get("img_url")
+    # db 생성
+    new_contents = Content(
+        title=title_receive,
+        body=body_receive,
+        img_url=image_receive,
+        author=current_user
+    )
+
+    # 데이터를 DB에 저장하기
+    # contents = Content(title=title_receive, body=body_receive, img_url=image_receive)
+    db.session.add(new_contents)
+    db.session.commit()
+    return redirect(url_for('contents'))
 
 # 이야기 지우기
+
+
 @app.route('/contents/delete/<int:contents_id>', methods=['POST'])
 def delete_contents(contents_id):
     contents = Content.query.get(contents_id)
@@ -199,52 +219,49 @@ def delete_contents(contents_id):
 
 
 # comment 페이지
-@app.route("/comments/<int:contents_id>", methods=['GET', 'POST']) # url 이게 맞나 ??
+@app.route("/comments/<contents_id>", methods=['GET', 'POST'])  # url 이게 맞나 ??
 def comments(contents_id):
-        # form에서 보낸 데이터 받아오기
-        # username_receive = request.form["username"]
-        
-        # data = Comment(username=username_receive, title=title_receive)
-        
-        # likes = db.Column(db.Integer, default=0)  # 좋아요 수를 저장하는 필드 추가
-        
-    comments_list = Comment.query.filter_by(post_id = contents_id).all()
-    print(comments_list)
-    
-    return render_template('comments.html', comments_list=comments_list, contents_id=contents_id)
+
+    comments_list = Comment.query.filter_by(post_id=contents_id).all()
+    print(current_user.id)
+
+    return render_template('comments.html', comments_list=comments_list, contents_id=contents_id, logged_in=current_user.is_authenticated, current_user=current_user)
+
 
 @app.route("/create_comment/<int:contents_id>", methods=["POST"])
 def create_comment(contents_id):
     requested_content = Content.query.get(contents_id)
     body = request.form.get("body")
     new_comments = Comment(
-        parent_post = requested_content,
-        comment_author = current_user,
-        text = body,
-        likes = 0
-            )
+        parent_post=requested_content,
+        comment_author=current_user,
+        text=body,
+        likes=0
+    )
     db.session.add(new_comments)
     db.session.commit()
     return redirect(url_for('comments', contents_id=contents_id))
 
 
-@app.route("/edit/<int:contents_id>", methods=['POST'])
-def edit_comments(contents_id):
+@app.route("/edit/<int:comment_id>", methods=['POST'])
+def edit_comment(comment_id):
     if request.method == 'POST':
-        comments = Comment.query.get(contents_id)
-        if comments:
-            comments.title = request.form["title"]
-            comments.username = request.form["username"]
+        comment = Comment.query.get(comment_id)
+        # contents = Content.query.filter_by(id = comment.post_id).first()
+        # print(contents.id)
+        if comment:
+            comment.text = request.form["title"]
             db.session.commit()
-    return redirect(url_for('comments'))
+    return redirect(url_for('comments', contents_id=comment.post_id))
 
-@app.route("/delete/<int:contents_id>", methods=['POST'])
-def delete_comment(contents_id):
-    comments = Comment.query.get(contents_id)
-    if comments:
-        db.session.delete(comments)
-        db.session.commit()
-    return redirect(url_for('comments'))
+
+@app.route("/delete_comment/<int:comment_id>", methods=['POST'])
+def delete_comment(comment_id):
+    comment = Comment.query.get(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+    return redirect(url_for('comments', contents_id=comment.post_id))
+
 
 @app.route("/like/<int:contents_id>", methods=["POST"])
 def like(contents_id):

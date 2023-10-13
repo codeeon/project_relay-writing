@@ -64,6 +64,20 @@ p {
   border-radius: 30px;
   background-color: rgb(216, 216, 216);
   border: none;
+  width: 40px;
+  height: 20px;
+}
+
+.card-ctr {
+  display:flex;
+  justify-content: right;
+  align-items: centers;
+  padding:5px;
+  gap: 5px;
+}
+
+.delete_form {
+  display: flex;  
 }
 
 .likebtn {
