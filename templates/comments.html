@@ -17,10 +17,32 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
     />
     <link rel="stylesheet" type="text/css" href="../static/css/comments.css" />
+    <script
+      src="https://kit.fontawesome.com/14bedfeaf2.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
 
   <body>
     <div class="main">
+      <div class="navbar">
+        <button
+          class="backBtn"
+          onclick="window.location.href='{{ url_for( 'contents', contents_id=contents_id ) }}';"
+        >
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button
+          class="postBtn"
+          id="postBtn"
+          type="button"
+          class="btn"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          <i class="fa-solid fa-pen"></i>글쓰기
+        </button>
+      </div>
       <!-- Button trigger modal -->
       <div class="content">
         <div>
@@ -37,7 +59,6 @@
 
         {% for comment in comments_list %}
         <div class="card">
-          
           {% if current_user.id == comment.author_id %}
           <div class="card-ctr">
             <button
