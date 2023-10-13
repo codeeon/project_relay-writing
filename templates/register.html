@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Project Relay</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='./css/register_style.css') }}"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gabarito&family=Pixelify+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <script defer src="{{ url_for('static', filename='/js/register.js') }}"></script>
+  </head>
+  <body>
+    <div class="base">
+      <div class="left"></div>
+      <div class="right">
+        <div class="formContainer">
+          <div class="loginContainer">
+            <span>이미 회원이신가요?</span>
+            <button
+              class="loginBtn"
+              onclick="window.location.href='{{ url_for( 'login' ) }}';"
+            >
+              로그인
+            </button>
+          </div>
+
+          <span class="title">Welcome to Relay!</span>
+          <span class="subtitle">정보를 입력해주세요.</span>
+          {% with messages = get_flashed_messages() %} {% if messages %}
+          <p>{{ messages }}</p>
+          {% endif %} {% endwith %}
+          <form class="form" action="{{ url_for('register') }}" method="post">
+            <div class="inputContainer">
+              <div class="msgContainer">
+                <span class="inputTitle">ID</span>
+                <span id="idMsg" class="errorMsg"></span>
+              </div>
+              
+              <input
+                type="text"
+                id="id_user"
+                name="id_user"
+                placeholder="아이디를 입력해주세요."
+                autocomplete="none"
+              />
+            </div>
+            <div class="inputContainer">
+              <div class="msgContainer">
+                <span class="inputTitle">Name</span>
+                <span id="nameMsg" class="errorMsg"></span>
+              </div>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="이름을 입력해주세요."
+                autocomplete="none"
+              />
+            </div>
+            <div class="inputContainer">
+              <div class="msgContainer">
+                <span class="inputTitle">Password</span>
+                <span id="pwMsg" class="errorMsg"></span>
+              </div>
+              <input
+                id="pw"
+                type="password"
+                name="password"
+                placeholder="비밀번호를 입력해주세요."
+              />
+            </div>
+            <div class="inputContainer">
+              <div class="msgContainer">
+                <span class="inputTitle">Confirm Password</span>
+                <span id="pwConfirmMsg" class="errorMsg"></span>
+              </div>
+              <input
+                id="pwConfirm"
+                type="password"
+                name="passwordCornfirm"
+                placeholder="비밀번호를 한번 더 입력해주세요."
+
+              />
+            </div>
+            <button id="submit" class="registerBtn" type="submit">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+  </body>
+</html>

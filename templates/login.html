@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Project Relay</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='/css/login_style.css') }}"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gabarito&family=Pixelify+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/14bedfeaf2.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="base">
+      <div class="left"></div>
+      <div class="right">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div id="alertContainer" class="alertContainer">
+            <i class="fa-solid fa-circle-exclamation alertIcon"></i>
+            <span class="alertMsg">{{ messages[0] }}</span>
+            <button class="alertCloseBtn"><i id="alertCloseIcon" class="fa-solid fa-xmark alertCloseIcon"></i></button>
+          </div>
+          {% endif %} {% endwith %}
+        <div class="formContainer">
+          <div class="signupContainer">
+            <span>회원이 아니신가요?</span>
+            <button
+              class="signupBtn"
+              onclick="window.location.href='{{ url_for( 'register' ) }}';"
+            >
+              회원가입
+            </button>
+          </div>
+
+          <span class="title">Welcome to Relay!</span>
+          <span class="subtitle">이메일과 비밀번호를 입력해주세요.</span>
+
+          <form id="login_form" class="form" action="{{ url_for('login') }}" method="post">
+            <div class="inputContainer">
+              <div class="msgContainer">
+                <span class="inputTitle">ID</span>
+                <span id="idMsg" class="errorMsg"></span>
+              </div>
+              <input
+                type="text"
+                id="id_user"
+                name="id_user"
+                placeholder="아이디를 입력해주세요."
+                autocomplete="none"
+              />
+            </div>
+            <div class="inputContainer">
+              <div class="msgContainer">
+                <span class="inputTitle">Password</span>
+                <span id="pwMsg" class="errorMsg"></span>
+              </div>
+              <input
+                id="pw"
+                type="password"
+                name="password"
+                placeholder="비밀번호를 입력해주세요."
+              />
+            </div>
+
+            <button id="submit" class="loginBtn" type="submit">Login</button>
+          </form>
+        </div>
+    </div>
+    <script>
+      // DOM 찾기
+const $id = document.getElementById("id_user");
+const $idMsg = document.getElementById("idMsg");
+const $pw = document.getElementById("pw");
+const $pwMsg = document.getElementById("pwMsg");
+const $submit = document.getElementById("submit");
+const $login_form = document.getElementById("login_form");
+
+const $alertContainer = document.getElementById("alertContainer");
+const $alertCloseBtn = document.getElementById("alertCloseBtn");
+
+// ID input 자동 포커스
+window.addEventListener("load", () => $id.focus());
+
+// 에레메세지 객체 생성
+const ERROR_MSG = "필수 정보입니다.";
+
+const checkRegex = (target) => {
+  const { value, id } = target;
+  return value.length === 0 ? "required" : true;
+};
+
+const checkValidation = (target, msgTarget) => {
+  const isValid = checkRegex(target);
+  if (isValid === "required") {
+    target.classList.add("border-red");
+    msgTarget.innerText = ERROR_MSG;
+  } else {
+    target.classList.remove("border-red");
+    msgTarget.innerText = "";
+  }
+};
+
+// 로직 실행
+$id.addEventListener("focusout", () => checkValidation($id, $idMsg));
+$pw.addEventListener("focusout", () => checkValidation($pw, $pwMsg));
+
+// 제출 버튼 누를 경우 유효성 검사
+$submit.addEventListener("click", (event) => {
+  event.preventDefault();
+  checkValidation($id, $idMsg)
+  checkValidation($pw, $pwMsg)
+  const isValidForm =
+    checkRegex($id, $idMsg) === true && checkRegex($pw, $pwMsg) === true;
+  if (isValidForm) {
+    $.ajax({
+      type:'post',
+      url: '/login',
+      data : $('#login_form').serialize(),
+      success: (res) => {
+        console.log(res);
+      }
+    })
+  }
+});
+
+$alertCloseBtn.addEventListener("click", () => {
+  document.getElementById("alertContainer").style.display = "none";
+});
+
+    </script>
+  </body>
+</html>
