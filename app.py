@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
-import re
 
 # 플라스크 서버
 app = Flask(__name__)
@@ -80,11 +79,17 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 # key를 기반으로 로그인
-
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+# 메인페이지
+@app.route('/')
+def main():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    
+    return render_template('main.html', logged_in=current_user.is_authenticated)
     
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -103,8 +108,8 @@ def register():
         # db에 이미 등록된 아이디인 경우 로그인 페이지로 이동하기
         # filter_by로 아이디을 찾기
         # first() : 첫번째로 매칭되는 값 가져오기
-        if len(new_user.name) == 0:
-            print('힝')
+
+
         if User.query.filter_by(id_user=request.form.get('id_user')).first():
             flash("존재하는 아이디입니다. 로그인으로 이동합니다.")  # 에러 메세지 (임시)
             return redirect(url_for('login'))  # 로그인 페이지로 이동
@@ -128,18 +133,22 @@ def login():
     if request.method == "POST":
         id_user = request.form.get('id_user')
         password = request.form.get('password')
+        
         # 등록되어 있는 아이디로 db찾기
         # filter_by로 아이디을 찾기
         # first() : 첫번째로 매칭되는 값 가져오기
         user = User.query.filter_by(id_user=id_user).first()
-        print(user)
+        
         # user정보가 없는 경우
         if not user:
-            flash("등록된 아이디가 존재하지 않습니다.")  # 에러메세지
+            flash("등록된 아이디가 존재하지 않습니다.")
+              # 에러메세지
             return redirect(url_for('login'))  # 로그인 페이지로 이동
+        
         # 비밀번호가 일치하지 않는 경우
         elif not check_password_hash(user.password, password):
             flash("비밀번호가 일치하지 않습니다.")
+        
         # 로그인
         else:
             login_user(user)
@@ -164,12 +173,7 @@ def secrets():
     print(current_user.name)
     return render_template("secrets.html", name=current_user.name)
 
-# 메인페이지
 
-
-@app.route('/')
-def main():
-    return render_template('main.html', logged_in=current_user.is_authenticated)
 
 
 if __name__ == '__main__':
